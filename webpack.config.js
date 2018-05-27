@@ -1,7 +1,7 @@
 const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const config = {
   mode: 'none',
   entry: {
@@ -9,15 +9,27 @@ const config = {
     post: './src/post.js'
   },
   output: {
-    filename: '[name].js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'js/[name].js',
+    path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: 'css/[name].css',
       chunkFilename: "[id].css"
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/images',
+        to: 'images',
+        toType: 'dir'
+      }
+    ])
   ],
+  devServer: {
+    contentBase: path.join(__dirname, '/'),
+    compress: true,
+    port: 9000
+  },
   module: {
     rules: [
       {
@@ -34,8 +46,21 @@ const config = {
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
-          "sass-loader"
+          'resolve-url-loader', // Resolve issue for relative path in scss
+          "sass-loader?sourceMap"
         ]
+      },
+      {
+        test: /\.(jp(e)?g|png|gif|svg)$/,
+        use: {
+          loader: 'url-loader',
+          options: { // Options for url-loader and fallback file-loader
+            limit: 8192,
+            name: '[name].[ext]',
+            outputPath: './css/images',
+            publicPath: './images'
+          }
+        }
       }
     ]
   }

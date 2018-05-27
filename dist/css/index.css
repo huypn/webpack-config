@@ -1,0 +1,9 @@
+header {
+  height: 400px;
+  background: url(./images/headerbg.png);
+}
+
+body {
+  background: url(./images/bg.jpg);
+  color: red;
+}
