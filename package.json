@@ -10,7 +10,7 @@
     "open": "webpack-dev-server --open"
   },
   "keywords": [],
-  "author": "",
+  "author": "Huy Pham",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.26.3",

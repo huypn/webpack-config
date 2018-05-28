@@ -2,6 +2,11 @@ const path = require('path');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+
+const app_configs = {
+  asset_dir: './dist/'
+};
+
 const config = {
   mode: 'none',
   entry: {
@@ -9,18 +14,18 @@ const config = {
     post: './src/post.js'
   },
   output: {
-    filename: 'js/[name].js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: app_configs.asset_dir + 'js/[name].js',
+    path: path.resolve(__dirname, './'),
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
+      filename: 'dist/css/[name].css',
       chunkFilename: "[id].css"
     }),
     new CopyWebpackPlugin([
       {
         from: 'src/images',
-        to: 'images',
+        to: app_configs.asset_dir + 'images',
         toType: 'dir'
       }
     ])
@@ -28,7 +33,11 @@ const config = {
   devServer: {
     contentBase: path.join(__dirname, '/'),
     compress: true,
-    port: 9000
+    port: 9000,
+    watchContentBase: true
+  },
+  watchOptions: {
+    poll: true
   },
   module: {
     rules: [
@@ -57,7 +66,7 @@ const config = {
           options: { // Options for url-loader and fallback file-loader
             limit: 8192,
             name: '[name].[ext]',
-            outputPath: './css/images',
+            outputPath: app_configs.asset_dir + 'css/images',
             publicPath: './images'
           }
         }
